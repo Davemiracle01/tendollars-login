@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login - TENDOLLARS</title>
+  <style>
+    body {
+      background: #111;
+      color: white;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+    input {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 8px;
+      border: none;
+      width: 250px;
+    }
+    button {
+      padding: 10px 25px;
+      background: gold;
+      border: none;
+      border-radius: 20px;
+      margin-top: 15px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #ffaa00;
+    }
+    nav {
+      background: #111;
+      padding: 15px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    nav a {
+      color: gold;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .message {
+      margin-top: 18px;
+      font-weight: 700;
+      font-size: 1.25rem;
+      min-height: 1.5em;
+      user-select: none;
+    }
+    .message.error {
+      color: #ff5555;
+    }
+    .message.success {
+      color: #a1ff78;
+    }
+    footer {
+      background: #000;
+      color: #bbb;
+      padding: 20px;
+      margin-top: 40px;
+      font-size: 0.9em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="login.html">Login</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="casino.html">Casino</a>
+  <a href="winners.html">Winners</a>
+  <a href="faq.html">FAQ</a>
+</nav>
+
+<h2>🔑 Login / Register</h2>
+<p>(Demo Only - No real accounts)</p>
+
+<form id="loginForm" onsubmit="return false;" aria-label="Login form">
+  <input type="text" id="phoneInput" placeholder="Phone Number (e.g. 254701234567)" required aria-required="true" aria-label="Phone Number">
+  <br>
+  <input type="password" id="passwordInput" placeholder="Password" required aria-required="true" aria-label="Password">
+  <br>
+  <button type="submit" aria-label="Login Button">Login</button>
+</form>
+
+<div id="message" class="message" aria-live="polite"></div>
+
+<footer>
+  <p>© 2025 TENDOLLARS | All Rights Reserved</p>
+  <p>Want a website like this? DM the dev on WhatsApp <b>+254769279076</b></p>
+</footer>
+
+<script>
+  const loginForm = document.getElementById('loginForm');
+  const phoneInput = document.getElementById('phoneInput');
+  const passwordInput = document.getElementById('passwordInput');
+  const messageEl = document.getElementById('message');
+
+  loginForm.addEventListener('submit', async () => {
+    const phone = phoneInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!phone || !password) {
+      messageEl.textContent = '⚠️ Please enter both phone number and password.';
+      messageEl.className = 'message error';
+      return;
+    }
+
+    messageEl.textContent = '🔄 Checking credentials...';
+    messageEl.className = 'message';
+
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, password })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        messageEl.textContent = '✅ Login successful! Redirecting...';
+        messageEl.className = 'message success';
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 1200);
+      } else {
+        messageEl.textContent = `❌ ${result.error || 'Login failed'}`;
+        messageEl.className = 'message error';
+      }
+    } catch (e) {
+      messageEl.textContent = '⚠️ Unable to contact server. Please try later.';
+      messageEl.className = 'message error';
+    }
+  });
+</script>
+
+</body>
+</html>

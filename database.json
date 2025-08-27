@@ -1,0 +1,6 @@
+{
+  "users": [
+    { "phone": "254701234567", "password": "demo123" },
+    { "phone": "254799876543", "password": "mypassword" }
+  ]
+}
